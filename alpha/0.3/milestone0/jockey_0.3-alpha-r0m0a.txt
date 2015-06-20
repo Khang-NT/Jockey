@@ -1,2 +1,11 @@
 Jockey 0.3_a-m0r0 Release Notes
-- Test post please ignore
+ - Test post please ignore
+ - Did some stuff
+ - Added some things
+ - It's pretty cool, I guess.
+ - I could have just hardcoded this in, but that's not as fun
+ - Seriously, though, I just want to see if AlertDialogs can have scroll bars
+ - They probably can, but if they can't then I probably have to do something weird to make it work
+ - These are some really long release notes
+ - Also, sorry if you saw the 0.3 APK and got excited. That was also a test post.
+ - Don't worry though, 0.3 is coming soon... ish.... Probably.
