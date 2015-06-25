@@ -1,11 +1,15 @@
 Jockey 0.3_a-m0r0 Release Notes
- - Test post please ignore
- - Did some stuff
- - Added some things
- - It's pretty cool, I guess.
- - I could have just hardcoded this in, but that's not as fun
- - Seriously, though, I just want to see if AlertDialogs can have scroll bars
- - They probably can, but if they can't then I probably have to do something weird to make it work
- - These are some really long release notes
- - Also, sorry if you saw the 0.3 APK and got excited. That was also a test post.
- - Don't worry though, 0.3 is coming soon... ish.... Probably.
+ - Major Update
+ - Redesigned to further conform to the Material Design Guidelines
+ - Implemented Google's Design Library for better Material Design
+	- The FAB is now a lot nicer
+	- ActionBars now hide with scrolling
+ - ListViews are now RecyclerViews for performance
+ - New Artist page
+ - New Search page
+ - New splash screen
+ - New media player service (This one works for real this time!)
+ - Various performance improvements
+ - Reduced memory usage
+ - Implemented logging through crashlytics
+ - Dropped support for Android 4.0
