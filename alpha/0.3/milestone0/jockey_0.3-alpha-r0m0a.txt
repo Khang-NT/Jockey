@@ -1,4 +1,4 @@
-Jockey 0.3_a-m0r0 Release Notes
+Jockey 0.3_a-m0r0a Release Notes
  - Major Update
  - Redesigned to further conform to the Material Design Guidelines
  - Implemented Google's Design Library for better Material Design

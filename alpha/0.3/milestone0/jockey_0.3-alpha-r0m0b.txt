@@ -1,0 +1,6 @@
+Jockey 0.3_a-m0r0b Release Notes
+ - Bug fixes
+	- Fixed 2 crashes on the artist page
+	- Fixed a crash on the now playing page
+	- Fixed a crash on the media player service on pre-lollipop devices
+ - Reduced the size of image resources
