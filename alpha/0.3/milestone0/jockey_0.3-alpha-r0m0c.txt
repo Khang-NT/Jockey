@@ -1,0 +1,5 @@
+Jockey 0.3_a-m0r0c Release Notes
+ - Fixed crash when navigating to artist from now playing page
+ - Improved confirmation messages & undo action when editing playlists
+ - "Switch to now playing" setting is now respected
+ - Small performance improvements
