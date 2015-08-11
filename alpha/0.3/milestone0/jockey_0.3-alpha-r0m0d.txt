@@ -1,0 +1,8 @@
+Jockey 0.3_a-m0r0d Release Notes
+ - Play music with Google Now and other apps by saying or searching for things like, "Okay Google, play my driving playlist"
+ - New icon
+ - Minor visual changes
+ - Added play and skip count logging
+ - Fixed bug where multiple songs appeared to be playing on the Now Playing page
+ - Fixed a potential crash on the Now Playing page
+ - Improved crash and bug logging
