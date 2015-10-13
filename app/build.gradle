@@ -21,21 +21,17 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
-        applicationId "com.marverenic.music"
+        applicationId "com.marverenic.music.demo"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 30100
-        versionName "0.3_alpha-m0r1a"
+        versionCode 1
+        versionName "demo"
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             zipAlignEnabled true
-        }
-        debug {
-            applicationIdSuffix ".debug"
-            versionNameSuffix '.debug'
         }
     }
 }
