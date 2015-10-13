@@ -1,6 +1,7 @@
 Jockey 0.3_a-m0r1a Release Notes
  - Added automatically generated playlists
  - Added support for Android 4.0
+ - Added support for Android 6.0 Marshmallow
  - Improved library refresh
  - Minor visual changes
  - Miscellaneous bug fixes and improvements
