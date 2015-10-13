@@ -18,7 +18,6 @@ import android.support.v7.app.AlertDialog;
 import android.util.SparseIntArray;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.marverenic.music.instances.Album;
@@ -414,9 +413,7 @@ public class Library {
                     autoPlaylists.add(gson.fromJson(new FileReader(externalFiles + "/" + s), AutoPlaylist.class));
                 }
             }
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-        }
+        } catch (IOException ignored) {}
 
         return autoPlaylists;
     }
@@ -1003,9 +1000,7 @@ public class Library {
                 playDates.put(Integer.parseInt(key), playDate);
             }
         }
-        catch (IOException e){
-            Crashlytics.logException(e);
-        }
+        catch (IOException ignored){}
     }
 
     /**
@@ -1558,9 +1553,7 @@ public class Library {
             playlistLib.add(playlist);
             sortPlaylistList(playlistLib);
             notifyPlaylistAdded(playlist);
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-        }
+        } catch (IOException ignored) {}
     }
 
     public static void editAutoPlaylist(Context context, AutoPlaylist playlist) {
@@ -1594,9 +1587,7 @@ public class Library {
             playlistLib.add(playlist);
 
             sortPlaylistList(playlistLib);
-        } catch (IOException e) {
-            Crashlytics.logException(e);
-        }
+        } catch (IOException ignored) {}
     }
 
     //

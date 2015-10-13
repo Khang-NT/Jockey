@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
 import com.marverenic.music.Library;
 
@@ -410,7 +409,6 @@ public class AutoPlaylist extends Playlist implements Parcelable {
                     Long.parseLong(value);
                 }
                 catch (NumberFormatException e){
-                    Crashlytics.logException(e);
                     throw new IllegalArgumentException("ID cannot be compared to value " + value);
                 }
             }
@@ -431,7 +429,6 @@ public class AutoPlaylist extends Playlist implements Parcelable {
                     Long.parseLong(value);
                 }
                 catch (NumberFormatException e){
-                    Crashlytics.logException(e);
                     throw new IllegalArgumentException("ID cannot be compared to value " + value);
                 }
             }
