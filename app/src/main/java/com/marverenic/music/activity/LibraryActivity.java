@@ -27,7 +27,6 @@ import com.marverenic.music.fragments.SongFragment;
 import com.marverenic.music.utils.Navigate;
 import com.marverenic.music.utils.PlaylistDialog;
 import com.marverenic.music.utils.Prefs;
-import com.marverenic.music.utils.Updater;
 import com.marverenic.music.view.FABMenu;
 
 public class LibraryActivity extends BaseActivity implements View.OnClickListener{
@@ -63,8 +62,6 @@ public class LibraryActivity extends BaseActivity implements View.OnClickListene
             getSupportActionBar().setHomeButtonEnabled(false);
             getSupportActionBar().setDisplayShowHomeEnabled(false);
         }
-
-        new Updater(this, findViewById(R.id.coordinator_layout)).execute();
     }
 
     @Override
