@@ -23,7 +23,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.crashlytics.android.Crashlytics;
 import com.marverenic.music.Library;
 import com.marverenic.music.R;
 import com.marverenic.music.activity.BaseActivity;
@@ -151,7 +150,6 @@ public class ArtistActivity extends BaseActivity {
                         artist = Query.getArtist(ArtistActivity.this, params[0]);
                     } catch (IOException|ParserConfigurationException|SAXException e) {
                         e.printStackTrace();
-                        Crashlytics.logException(e);
                         artist = null;
                     }
 

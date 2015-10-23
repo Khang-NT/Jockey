@@ -2,7 +2,6 @@ package com.marverenic.music.lastfm;
 
 import android.content.Context;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,8 +40,7 @@ public final class Cache {
             FileWriter cacheWriter = new FileWriter(getItemPath(context, artistId));
             cacheWriter.write(gson.toJson(artist, LArtist.class));
             cacheWriter.close();
-        } catch (IOException e) {
-            Crashlytics.logException(e);
+        } catch (IOException ignored) {
         }
     }
 
@@ -51,7 +49,6 @@ public final class Cache {
             Gson gson = new Gson();
             return gson.fromJson(new FileReader(getItemPath(context, artistId)), LArtist.class);
         } catch (IOException e) {
-            Crashlytics.logException(e);
             return null;
         }
     }

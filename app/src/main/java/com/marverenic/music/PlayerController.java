@@ -12,7 +12,6 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.marverenic.music.instances.Song;
 import com.marverenic.music.utils.Fetch;
 
@@ -64,7 +63,6 @@ public class PlayerController {
             try {
                 playerService.stop();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -79,7 +77,6 @@ public class PlayerController {
             try {
                 playerService.skip();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -94,7 +91,6 @@ public class PlayerController {
             try {
                 playerService.previous();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -109,7 +105,6 @@ public class PlayerController {
             try {
                 playerService.begin();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -124,7 +119,6 @@ public class PlayerController {
             try {
                 playerService.togglePlay();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -139,7 +133,6 @@ public class PlayerController {
             try {
                 playerService.play();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -154,7 +147,6 @@ public class PlayerController {
             try {
                 playerService.pause();
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -188,7 +180,6 @@ public class PlayerController {
             try {
                 playerService.setPrefs(prefs.getBoolean(Player.PREFERENCE_SHUFFLE, false), repeatOption);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -208,7 +199,6 @@ public class PlayerController {
             try {
                 playerService.setPrefs(shuffleOption, prefs.getInt(Player.PREFERENCE_REPEAT, 0));
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -225,7 +215,6 @@ public class PlayerController {
             try {
                 playerService.setQueue(newQueue, newPosition);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -241,7 +230,6 @@ public class PlayerController {
             try {
                 playerService.changeSong(queuePosition);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -258,7 +246,6 @@ public class PlayerController {
             try {
                 playerService.editQueue(queue, queuePosition);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
 
             }
@@ -275,7 +262,6 @@ public class PlayerController {
             try {
                 playerService.queueNext(song);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -291,7 +277,6 @@ public class PlayerController {
             try {
                 playerService.queueNextList(songs);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -307,7 +292,6 @@ public class PlayerController {
             try {
                 playerService.queueLast(song);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -323,7 +307,6 @@ public class PlayerController {
             try {
                 playerService.queueLastList(songs);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -338,7 +321,6 @@ public class PlayerController {
             try {
                 playerService.seek(position);
             } catch (RemoteException e) {
-                Crashlytics.logException(e);
                 Log.w(TAG, e);
             }
         }
@@ -353,7 +335,6 @@ public class PlayerController {
         try {
             return playerService.isPlaying();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return false;
         }
@@ -368,7 +349,6 @@ public class PlayerController {
         try {
             return playerService.isPreparing();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return false;
         }
@@ -407,7 +387,6 @@ public class PlayerController {
         try {
             return playerService.getNowPlaying();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return null;
         }
@@ -422,7 +401,6 @@ public class PlayerController {
         try {
             return new ArrayList<>(playerService.getQueue());
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return null;
 
@@ -438,7 +416,6 @@ public class PlayerController {
         try {
             return playerService.getQueuePosition();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return 0;
         }
@@ -453,7 +430,6 @@ public class PlayerController {
         try {
             return playerService.getCurrentPosition();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return 0;
         }
@@ -466,7 +442,6 @@ public class PlayerController {
         try {
             return playerService.getDuration();
         } catch (RemoteException e) {
-            Crashlytics.logException(e);
             Log.w(TAG, e);
             return Integer.MAX_VALUE;
         }
