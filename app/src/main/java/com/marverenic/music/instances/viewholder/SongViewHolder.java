@@ -29,13 +29,13 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private View itemView;
     private TextView songName;
     private TextView detailText;
-    private ImageView moreButton;
-    private Song reference;
+
+    protected Song reference;
+    protected int index;
+
     private Playlist playlistReference;
     private OnRemovedListener removalListener;
     private ArrayList<Song> songList;
-
-    private View.OnClickListener customListener;
 
     public interface OnRemovedListener{
         void onSongRemoved(View view, Song song);
@@ -48,7 +48,7 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         songName = (TextView) itemView.findViewById(R.id.instanceTitle);
         detailText = (TextView) itemView.findViewById(R.id.instanceDetail);
-        moreButton = (ImageView) itemView.findViewById(R.id.instanceMore);
+        ImageView moreButton = (ImageView) itemView.findViewById(R.id.instanceMore);
 
         itemView.setOnClickListener(this);
         moreButton.setOnClickListener(this);
@@ -60,15 +60,12 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.removalListener = listener;
     }
 
-    public void update(Song s){
+    public void update(Song s, int index) {
         reference = s;
+        this.index = index;
 
         songName.setText(s.songName);
         detailText.setText(s.artistName + " - " + s.albumName);
-    }
-
-    public void setClickListener(View.OnClickListener listener){
-        customListener = listener;
     }
 
     @Override
@@ -89,12 +86,8 @@ public class SongViewHolder extends RecyclerView.ViewHolder implements View.OnCl
                 menu.show();
                 break;
             default:
-                if (customListener != null){
-                    customListener.onClick(v);
-                }
-                else if (songList != null) {
-                    // TODO set list index to properly play song lists with duplicate song entries
-                    PlayerController.setQueue(songList, songList.indexOf(reference));
+                if (songList != null) {
+                    PlayerController.setQueue(songList, index);
                     PlayerController.begin();
 
                     if (Prefs.getPrefs(itemView.getContext()).getBoolean(Prefs.SWITCH_TO_PLAYING, true))

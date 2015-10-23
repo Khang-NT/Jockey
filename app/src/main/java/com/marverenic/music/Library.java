@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.Properties;
 
 public class Library {
@@ -407,6 +406,11 @@ public class Library {
         try {
             File externalFiles = new File(context.getExternalFilesDir(null) + "/");
 
+            if (!externalFiles.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                externalFiles.mkdirs();
+            }
+
             String[] files = externalFiles.list();
             for (String s : files) {
                 if (s.endsWith(AUTO_PLAYLIST_EXTENSION)) {
@@ -540,11 +544,11 @@ public class Library {
      * Sorts the libraries in memory using the default {@link Library} sort methods
      */
     public static void sort (){
-        sortSongList(songLib);
-        sortAlbumList(albumLib);
-        sortArtistList(artistLib);
-        sortPlaylistList(playlistLib);
-        sortGenreList(genreLib);
+        Collections.sort(songLib);
+        Collections.sort(albumLib);
+        Collections.sort(artistLib);
+        Collections.sort(playlistLib);
+        Collections.sort(genreLib);
     }
 
     /**
@@ -587,124 +591,6 @@ public class Library {
      */
     public static ArrayList<Genre> getGenres(){
         return genreLib;
-    }
-
-    //
-    //          LIBRARY SORT METHODS
-    //
-
-    /**
-     * Sorts an {@link ArrayList} of {@link Song}s by name, ignoring leading "the "'s and "a "'s
-     * @param songs the {@link ArrayList} to be sorted
-     */
-    public static void sortSongList(final ArrayList<Song> songs){
-        Comparator<Song> songComparator = new Comparator<Song>() {
-            @Override
-            public int compare(Song o1, Song o2) {
-                String o1c = o1.songName.toLowerCase(Locale.ENGLISH);
-                String o2c = o2.songName.toLowerCase(Locale.ENGLISH);
-                if (o1c.startsWith("the ")) {
-                    o1c = o1c.substring(4);
-                } else if (o1c.startsWith("a ")) {
-                    o1c = o1c.substring(2);
-                }
-                if (o2c.startsWith("the ")) {
-                    o2c = o2c.substring(4);
-                } else if (o2c.startsWith("a ")) {
-                    o2c = o2c.substring(2);
-                }
-                return o1c.compareTo(o2c);
-            }
-        };
-        Collections.sort(songs, songComparator);
-    }
-
-    /**
-     * Sorts an {@link ArrayList} of {@link Album}s by name, ignoring leading "the "'s and "a "'s
-     * @param albums the {@link ArrayList} to be sorted
-     */
-    public static void sortAlbumList (final ArrayList<Album> albums){
-        Comparator<Album> albumComparator = new Comparator<Album>() {
-            @Override
-            public int compare(Album o1, Album o2) {
-                String o1c = o1.albumName.toLowerCase(Locale.ENGLISH);
-                String o2c = o2.albumName.toLowerCase(Locale.ENGLISH);
-                if (o1c.startsWith("the ")) {
-                    o1c = o1c.substring(4);
-                } else if (o1c.startsWith("a ")) {
-                    o1c = o1c.substring(2);
-                }
-                if (o2c.startsWith("the ")) {
-                    o2c = o2c.substring(4);
-                } else if (o2c.startsWith("a ")) {
-                    o2c = o2c.substring(2);
-                }
-                return o1c.compareTo(o2c);
-            }
-        };
-        Collections.sort(albums, albumComparator);
-    }
-
-    /**
-     * Sorts an {@link ArrayList} of {@link Artist}s by name, ignoring leading "the "'s and "a "'s
-     * @param artists the {@link ArrayList} to be sorted
-     */
-    public static void sortArtistList (final ArrayList<Artist> artists){
-        Comparator<Artist> artistComparator = new Comparator<Artist>() {
-            @Override
-            public int compare(Artist o1, Artist o2) {
-                String o1c = o1.artistName.toLowerCase(Locale.ENGLISH);
-                String o2c = o2.artistName.toLowerCase(Locale.ENGLISH);
-                if (o1c.startsWith("the ")) {
-                    o1c = o1c.substring(4);
-                } else if (o1c.startsWith("a ")) {
-                    o1c = o1c.substring(2);
-                }
-                if (o2c.startsWith("the ")) {
-                    o2c = o2c.substring(4);
-                } else if (o2c.startsWith("a ")) {
-                    o2c = o2c.substring(2);
-                }
-                return o1c.compareTo(o2c);
-            }
-        };
-        Collections.sort(artists, artistComparator);
-    }
-
-    /**
-     * Sorts an {@link ArrayList} of {@link Playlist}s by name
-     * @param playlists {@link ArrayList} to be sorted
-     */
-    public static void sortPlaylistList (final ArrayList<Playlist> playlists){
-        Comparator<Playlist> playlistComparator = new Comparator<Playlist>() {
-            @Override
-            public int compare(Playlist o1, Playlist o2) {
-                if (!o1.getClass().equals(o2.getClass())) {
-                    if (o1 instanceof AutoPlaylist) {
-                        return -1;
-                    }
-                    if (o2 instanceof AutoPlaylist) {
-                        return 1;
-                    }
-                }
-                return o1.playlistName.compareToIgnoreCase(o2.playlistName);
-            }
-        };
-        Collections.sort(playlists, playlistComparator);
-    }
-
-    /**
-     * Sorts an {@link ArrayList} of {@link Genre}s by name
-     * @param genres the {@link ArrayList} to be sorted
-     */
-    public static void sortGenreList (final ArrayList<Genre> genres){
-        Comparator<Genre> genreComparator = new Comparator<Genre>() {
-            @Override
-            public int compare(Genre o1, Genre o2) {
-                return o1.genreName.compareToIgnoreCase(o2.genreName);
-            }
-        };
-        Collections.sort(genres, genreComparator);
     }
 
     //
@@ -1369,7 +1255,7 @@ public class Library {
                                         @Nullable final ArrayList<Song> songList) {
         final Playlist added = makePlaylist(context, playlistName, songList);
         playlistLib.add(added);
-        sortPlaylistList(playlistLib);
+        Collections.sort(playlistLib);
         notifyPlaylistAdded(added);
         return added;
     }
@@ -1453,7 +1339,7 @@ public class Library {
         // Update the playlist library & resort it
         playlistLib.clear();
         setPlaylistLib(scanPlaylists(context));
-        sortPlaylistList(playlistLib);
+        Collections.sort(playlistLib);
         notifyPlaylistRemoved(playlist);
     }
 
@@ -1551,7 +1437,7 @@ public class Library {
 
             // Add the playlist to the library and resort the playlist library
             playlistLib.add(playlist);
-            sortPlaylistList(playlistLib);
+            Collections.sort(playlistLib);
             notifyPlaylistAdded(playlist);
         } catch (IOException ignored) {}
     }
@@ -1585,8 +1471,7 @@ public class Library {
             // being changed that their values will be updated without having to rescan the
             // entire library
             playlistLib.add(playlist);
-
-            sortPlaylistList(playlistLib);
+			Collections.sort(playlistLib);
         } catch (IOException ignored) {}
     }
 
