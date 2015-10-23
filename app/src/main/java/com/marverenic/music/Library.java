@@ -20,6 +20,7 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.marverenic.music.instances.Album;
 import com.marverenic.music.instances.Artist;
 import com.marverenic.music.instances.AutoPlaylist;
@@ -28,16 +29,19 @@ import com.marverenic.music.instances.Playlist;
 import com.marverenic.music.instances.Song;
 import com.marverenic.music.utils.Themes;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 
 public class Library {
@@ -45,6 +49,12 @@ public class Library {
     public static final String PLAY_COUNT_FILENAME = ".playcount";
     public static final String PLAY_COUNT_FILE_COMMENT = "This file contains play count information for Jockey and should not be edited";
     public static final int PERMISSION_REQUEST_ID = 0x01;
+
+    private static final String FILENAME_PLAYLISTS = "library-playlists.json";
+    private static final String FILENAME_SONGS = "library-songs.json";
+    private static final String FILENAME_ARTISTS = "library-artists.json";
+    private static final String FILENAME_ALBUMS = "library-albums.json";
+    private static final String FILENAME_GENRES = "library-genres.json";
 
     private static final String AUTO_PLAYLIST_EXTENSION = ".jpl";
 
@@ -58,6 +68,7 @@ public class Library {
     private static final SparseIntArray skipCounts = new SparseIntArray();
     private static final SparseIntArray playDates = new SparseIntArray();
 
+    @Deprecated
     private static final String[] songProjection = new String[]{
             MediaStore.Audio.Media.TITLE,
             MediaStore.Audio.Media._ID,
@@ -72,30 +83,7 @@ public class Library {
             MediaStore.Audio.Media.TRACK
     };
 
-    private static final String[] artistProjection = new String[]{
-            MediaStore.Audio.Artists._ID,
-            MediaStore.Audio.Artists.ARTIST,
-    };
-
-    private static final String[] albumProjection = new String[]{
-            MediaStore.Audio.Albums._ID,
-            MediaStore.Audio.Albums.ALBUM,
-            MediaStore.Audio.Media.ARTIST_ID,
-            MediaStore.Audio.Albums.ARTIST,
-            MediaStore.Audio.Albums.LAST_YEAR,
-            MediaStore.Audio.Albums.ALBUM_ART
-    };
-
-    private static final String[] playlistProjection = new String[]{
-            MediaStore.Audio.Playlists._ID,
-            MediaStore.Audio.Playlists.NAME
-    };
-
-    private static final String[] genreProjection = new String[]{
-            MediaStore.Audio.Genres._ID,
-            MediaStore.Audio.Genres.NAME
-    };
-
+    @Deprecated
     private static final String[] playlistEntryProjection = new String[]{
             MediaStore.Audio.Playlists.Members.TITLE,
             MediaStore.Audio.Playlists.Members.AUDIO_ID,
@@ -225,11 +213,15 @@ public class Library {
     public static void scanAll (final Activity activity){
         if (hasRWPermission(activity)) {
             resetAll();
-            setPlaylistLib(scanPlaylists(activity));
-            setSongLib(scanSongs(activity));
-            setArtistLib(scanArtists(activity));
-            setAlbumLib(scanAlbums(activity));
-            setGenreLib(scanGenres(activity));
+            try {
+                setPlaylistLib(scanPlaylists(activity));
+                setSongLib(scanSongs(activity));
+                setArtistLib(scanArtists(activity));
+                setAlbumLib(scanAlbums(activity));
+                setGenreLib(scanGenres(activity));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             sort();
             notifyLibraryRefreshed();
         }
@@ -243,42 +235,12 @@ public class Library {
      * @param context {@link Context} to use to open a {@link Cursor}
      * @return An {@link ArrayList} with the {@link Song}s in the MediaStore
      */
-    public static ArrayList<Song> scanSongs (Context context){
-        ArrayList<Song> songs = new ArrayList<>();
-
-        Cursor cur = context.getContentResolver().query(
-                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                songProjection,
-                MediaStore.Audio.Media.IS_MUSIC + "!= 0",
-                null,
-                MediaStore.Audio.Media.TITLE + " ASC");
-
-        if (cur == null) {
-            throw new RuntimeException("Content resolver query returned null");
-        }
-
-        for (int i = 0; i < cur.getCount(); i++) {
-            cur.moveToPosition(i);
-            Song s = new Song(
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.TITLE)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media._ID)),
-                    (cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST)).equals(MediaStore.UNKNOWN_STRING))
-                            ? context.getString(R.string.no_artist)
-                            : cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.ARTIST)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.ALBUM)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.DURATION)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Media.DATA)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.YEAR)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID)));
-
-            s.trackNumber = cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.TRACK));
-            songs.add(s);
-        }
-        cur.close();
-
-        return songs;
+    public static ArrayList<Song> scanSongs (Context context) throws IOException {
+        Gson gson = new Gson();
+        File songJSON = new File(context.getExternalFilesDir(null), FILENAME_SONGS);
+        FileInputStream songIn = new FileInputStream(songJSON);
+        String songGSON = convertStreamToString(songIn);
+        return gson.fromJson(songGSON, new TypeToken<List<Song>>() {}.getType());
     }
 
     /**
@@ -286,36 +248,12 @@ public class Library {
      * @param context {@link Context} to use to open a {@link Cursor}
      * @return An {@link ArrayList} with the {@link Artist}s in the MediaStore
      */
-    public static ArrayList<Artist> scanArtists (Context context){
-        ArrayList<Artist> artists = new ArrayList<>();
-
-        Cursor cur = context.getContentResolver().query(
-                MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                artistProjection,
-                null,
-                null,
-                MediaStore.Audio.Artists.ARTIST + " ASC");
-
-        if (cur == null) {
-            throw new RuntimeException("Content resolver query returned null");
-        }
-
-        for (int i = 0; i < cur.getCount(); i++) {
-            cur.moveToPosition(i);
-            if (!cur.getString(cur.getColumnIndex(MediaStore.Audio.Artists.ARTIST)).equals(MediaStore.UNKNOWN_STRING)) {
-                artists.add(new Artist(
-                        cur.getInt(cur.getColumnIndex(MediaStore.Audio.Artists._ID)),
-                        cur.getString(cur.getColumnIndex(MediaStore.Audio.Artists.ARTIST))));
-            }
-            else{
-                artists.add(new Artist(
-                        cur.getInt(cur.getColumnIndex(MediaStore.Audio.Artists._ID)),
-                        context.getString(R.string.no_artist)));
-            }
-        }
-        cur.close();
-
-        return artists;
+    public static ArrayList<Artist> scanArtists (Context context) throws IOException {
+        Gson gson = new Gson();
+        File artistJson = new File(context.getExternalFilesDir(null), FILENAME_ARTISTS);
+        FileInputStream artistIn = new FileInputStream(artistJson);
+        String artistGson = convertStreamToString(artistIn);
+        return gson.fromJson(artistGson, new TypeToken<List<Artist>>() {}.getType());
     }
 
     /**
@@ -323,35 +261,12 @@ public class Library {
      * @param context {@link Context} to use to open a {@link Cursor}
      * @return An {@link ArrayList} with the {@link Album}s in the MediaStore
      */
-    public static ArrayList<Album> scanAlbums (Context context){
-        ArrayList<Album> albums = new ArrayList<>();
-
-        Cursor cur = context.getContentResolver().query(
-                MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                albumProjection,
-                null,
-                null,
-                MediaStore.Audio.Albums.ALBUM + " ASC");
-
-        if (cur == null) {
-            throw new RuntimeException("Content resolver query returned null");
-        }
-
-        for (int i = 0; i < cur.getCount(); i++) {
-            cur.moveToPosition(i);
-            albums.add(new Album(
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Albums._ID)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.ALBUM)),
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID)),
-                    (cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.ARTIST)).equals(MediaStore.UNKNOWN_STRING))
-                            ? context.getString(R.string.no_artist)
-                            : cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.ARTIST)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.LAST_YEAR)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART))));
-        }
-        cur.close();
-
-        return albums;
+    public static ArrayList<Album> scanAlbums (Context context) throws IOException {
+        Gson gson = new Gson();
+        File albmJson = new File(context.getExternalFilesDir(null), FILENAME_ALBUMS);
+        FileInputStream albumIn = new FileInputStream(albmJson);
+        String albumGson = convertStreamToString(albumIn);
+        return gson.fromJson(albumGson, new TypeToken<List<Album>>() {}.getType());
     }
 
     /**
@@ -359,38 +274,16 @@ public class Library {
      * @param context {@link Context} to use to open a {@link Cursor}
      * @return An {@link ArrayList} with the {@link Playlist}s in the MediaStore
      */
-    public static ArrayList<Playlist> scanPlaylists (Context context){
-        ArrayList<Playlist> playlists = new ArrayList<>();
+    public static ArrayList<Playlist> scanPlaylists (Context context) throws IOException {
+        ArrayList<Playlist> playlists;
 
-        Cursor cur = context.getContentResolver().query(
-                MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-                playlistProjection,
-                null,
-                null,
-                MediaStore.Audio.Playlists.NAME + " ASC");
+        Gson gson = new Gson();
+        File playlistJson = new File(context.getExternalFilesDir(null), FILENAME_PLAYLISTS);
+        FileInputStream playlistIn = new FileInputStream(playlistJson);
+        String playlistGson = convertStreamToString(playlistIn);
+        playlists = gson.fromJson(playlistGson, new TypeToken<List<Playlist>>() {}.getType());
 
-        if (cur == null) {
-            throw new RuntimeException("Content resolver query returned null");
-        }
-
-        for (int i = 0; i < cur.getCount(); i++) {
-            cur.moveToPosition(i);
-            playlists.add(new Playlist(
-                    cur.getInt(cur.getColumnIndex(MediaStore.Audio.Playlists._ID)),
-                    cur.getString(cur.getColumnIndex(MediaStore.Audio.Playlists.NAME))));
-        }
-        cur.close();
-
-        for (Playlist p : scanAutoPlaylists(context)) {
-            if (playlists.remove(p)) {
-                playlists.add(p);
-            } else {
-                // If AutoPlaylists have been deleted outside of Jockey, delete its configuration
-                //noinspection ResultOfMethodCallIgnored
-                new File(context.getExternalFilesDir(null) + "/" + p.playlistName + AUTO_PLAYLIST_EXTENSION)
-                        .delete();
-            }
-        }
+        playlists.addAll(scanAutoPlaylists(context));
         return playlists;
     }
 
@@ -427,57 +320,23 @@ public class Library {
      * @param context {@link Context} to use to open a {@link Cursor}
      * @return An {@link ArrayList} with the {@link Genre}s in the MediaStore
      */
-    public static ArrayList<Genre> scanGenres (Context context){
-        ArrayList<Genre> genres = new ArrayList<>();
+    public static ArrayList<Genre> scanGenres (Context context) throws IOException {
+        Gson gson = new Gson();
+        File genreJson = new File(context.getExternalFilesDir(null), FILENAME_GENRES);
+        FileInputStream genreIn = new FileInputStream(genreJson);
+        String genreGSON = convertStreamToString(genreIn);
+        return gson.fromJson(genreGSON, new TypeToken<List<Genre>>() {}.getType());
+    }
 
-        Cursor cur = context.getContentResolver().query(
-                MediaStore.Audio.Genres.EXTERNAL_CONTENT_URI,
-                genreProjection,
-                null,
-                null,
-                MediaStore.Audio.Genres.NAME + " ASC");
-
-        if (cur == null) {
-            throw new RuntimeException("Content resolver query returned null");
+    public static String convertStreamToString(InputStream is) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            sb.append(line).append("\n");
         }
-
-        for (int i = 0; i < cur.getCount(); i++) {
-            cur.moveToPosition(i);
-            int thisGenreId = cur.getInt(cur.getColumnIndex(MediaStore.Audio.Genres._ID));
-
-            if (cur.getString(cur.getColumnIndex(MediaStore.Audio.Genres.NAME)).equalsIgnoreCase("Unknown")){
-                genres.add(new Genre(-1, context.getString(R.string.unknown)));
-            }
-            else {
-                genres.add(new Genre(
-                        thisGenreId,
-                        cur.getString(cur.getColumnIndex(MediaStore.Audio.Genres.NAME))));
-
-                // Associate all songs in this genre by setting the genreID field of each song in the genre
-
-                Cursor genreCur = context.getContentResolver().query(
-                        MediaStore.Audio.Genres.Members.getContentUri("external", thisGenreId),
-                        new String[]{MediaStore.Audio.Media._ID},
-                        MediaStore.Audio.Media.IS_MUSIC + " != 0 ", null, null);
-
-                if (genreCur == null) {
-                    throw new RuntimeException("Content resolver query returned null");
-                }
-
-                genreCur.moveToFirst();
-
-                final int ID_INDEX = genreCur.getColumnIndex(MediaStore.Audio.Media._ID);
-                for (int j = 0; j < genreCur.getCount(); j++) {
-                    genreCur.moveToPosition(j);
-                    final Song s = findSongById(genreCur.getInt(ID_INDEX));
-                    if (s != null) s.genreId = thisGenreId;
-                }
-                genreCur.close();
-            }
-        }
-        cur.close();
-
-        return genres;
+        reader.close();
+        return sb.toString();
     }
 
     //
@@ -962,7 +821,9 @@ public class Library {
         final Context context = view.getContext();
         String trimmedName = playlistName.trim();
 
-        setPlaylistLib(scanPlaylists(context));
+        try {
+            setPlaylistLib(scanPlaylists(context));
+        } catch (Exception ignored) {}
 
         String error = verifyPlaylistName(context, trimmedName);
         if (error != null){
@@ -1338,7 +1199,9 @@ public class Library {
 
         // Update the playlist library & resort it
         playlistLib.clear();
-        setPlaylistLib(scanPlaylists(context));
+        try {
+            setPlaylistLib(scanPlaylists(context));
+        } catch (Exception ignored) {}
         Collections.sort(playlistLib);
         notifyPlaylistRemoved(playlist);
     }

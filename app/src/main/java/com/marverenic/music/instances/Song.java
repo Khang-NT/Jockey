@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
 import com.marverenic.music.Library;
 
 import java.util.Comparator;
@@ -21,18 +22,33 @@ public class Song implements Parcelable, Comparable<Song> {
         }
     };
 
+    @SerializedName("songName")
     public String songName;
+    @SerializedName("songId")
     public int songId;
+    @SerializedName("artistName")
     public String artistName;
+    @SerializedName("albumName")
     public String albumName;
+    @SerializedName("songDuration")
     public int songDuration;
+    @SerializedName("location")
     public String location;
+    @SerializedName("albumId")
+    public int albumId;
+    @SerializedName("artistId")
+    public int artistId;
+    @SerializedName("genreId")
+    public int genreId = -1;
+    @SerializedName("trackNumber")
+    public int trackNumber = 0;
+    @SerializedName("playCount")
+    public int playCount = 0;
+    @SerializedName("skipCount")
+    public int skipCount = 0;
+
     public int year;
     public int dateAdded; // seconds since Jan 1, 1970
-    public int albumId;
-    public int artistId;
-    public int genreId = -1;
-    public int trackNumber = 0;
 
     public Song(final String songName, final int songId, final String artistName,
                 final String albumName, final int songDuration, final String location,

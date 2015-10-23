@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Genre implements Parcelable, Comparable<Genre> {
 
     public static final Parcelable.Creator<Genre> CREATOR = new Parcelable.Creator<Genre>() {
@@ -16,7 +18,9 @@ public class Genre implements Parcelable, Comparable<Genre> {
         }
     };
 
+    @SerializedName("genreId")
     public int genreId;
+    @SerializedName("genreName")
     public String genreName;
 
     public Genre(final int genreId, final String genreName) {

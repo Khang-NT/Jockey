@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Locale;
 
 public class Album implements Parcelable, Comparable<Album> {
@@ -18,11 +20,17 @@ public class Album implements Parcelable, Comparable<Album> {
         }
     };
 
+    @SerializedName("albumId")
     public int albumId;
+    @SerializedName("albumName")
     public String albumName;
+    @SerializedName("artistId")
     public int artistId;
+    @SerializedName("artistName")
     public String artistName;
+    @SerializedName("year")
     public String year;
+    @SerializedName("artUri")
     public String artUri;
 
     public Album(final int albumId, final String albumName, final int artistId, final String artistName, final String year, final String artUri) {

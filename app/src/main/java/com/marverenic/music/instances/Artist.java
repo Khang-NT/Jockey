@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Locale;
 
 public class Artist implements Parcelable, Comparable<Artist> {
@@ -18,7 +20,9 @@ public class Artist implements Parcelable, Comparable<Artist> {
         }
     };
 
+    @SerializedName("artistId")
     public int artistId;
+    @SerializedName("artistName")
     public String artistName;
 
     public Artist(final int artistId, final String artistName) {
