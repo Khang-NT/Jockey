@@ -4,13 +4,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
 import com.marverenic.music.Library;
 import com.marverenic.music.instances.Album;
 import com.marverenic.music.instances.Song;
+
+import java.io.File;
 
 public class Fetch {
 
@@ -46,17 +47,13 @@ public class Fetch {
         return null;
     }
 
-    public static Bitmap fetchFullArt(Song song){
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-
-        try {
-            retriever.setDataSource(song.location);
-            byte[] stream = retriever.getEmbeddedPicture();
-            if (stream != null)
-                return BitmapFactory.decodeByteArray(stream, 0, stream.length);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
+    public static Bitmap fetchFullArt(Song song) {
+        Album reference = Library.findAlbumById(song.albumId);
+        if (reference != null) {
+            File image = new File(reference.artUri);
+            if (image.exists()) {
+                return BitmapFactory.decodeFile(image.getAbsolutePath());
+            }
         }
         return null;
     }

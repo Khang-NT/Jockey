@@ -113,18 +113,15 @@
         <!-- Player Service -->
         <service
             android:name=".PlayerService"
-            android:process=":player"
             android:exported="false" />
 
         <!-- Broadcast Receivers -->
         <receiver
             android:name=".PlayerService$Listener"
-            android:process=":player"
             android:exported="false" />
 
         <receiver
             android:name=".PlayerService$RemoteControlReceiver"
-            android:process=":player"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON"/>
