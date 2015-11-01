@@ -1,0 +1,4 @@
+Jockey 1.0.0 Release Notes
+ - Small aesthetic improvements
+ - Fixed related artists not working
+ - Jockey is on Google Play! If you choose to update you'll be taken to the Play Store, but you can still install it yourself by downloading the latest version from Jockey's GitHub page

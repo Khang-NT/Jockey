@@ -1,7 +1,13 @@
 # Get Jockey
 This branch contains compiled APK's for Jockey. You can install Jockey like any other app that isn't in the Play Store (Also referred to as sideloading) -- just enable installation of applications from "Unknown Sources" in settings, open the APK on your phone like a regular file and follow the instructions of the package installer.
 
-## Alpha
+## Google Play
+The easiest way to get Jockey is from [Google Play](https://play.google.com/store/apps/details?id=com.marverenic.music). You can still sideload the latest version yourself by using one of the links below, but you'll have to update Jockey manually every time an update is released.
+
+## Stable
+[Latest version (1.0.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.0/jockey_1.0.0.apk)
+
+## Pre-release Alpha
 [latest version (0.3-a-m0r1a)](https://raw.githubusercontent.com/marverenic/Jockey/build/alpha/0.3/milestone0/release1/jockey_0.3-alpha-m0r1a.apk)
 [release notes (0.3-a-m0r1a)](https://raw.githubusercontent.com/marverenic/Jockey/build/alpha/0.3/milestone0/release1/jockey_0.3-alpha-m0r1a.txt)
 
