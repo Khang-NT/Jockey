@@ -1,0 +1,5 @@
+Jockey 1.1.0 beta 0 Release Notes
+Initial equalizer support
+
+Known issues:
+ - There's a slight delay between when music is played for the first time in a session and when the equalizer affects playback
