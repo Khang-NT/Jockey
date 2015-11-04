@@ -1,0 +1,2 @@
+Jockey 1.1.0 beta 1 Release Notes
+Added equalizer presets
