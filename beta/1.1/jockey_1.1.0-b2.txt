@@ -1,0 +1,3 @@
+Jockey 1.1.0 beta 2 Release Notes
+Added equalizer toggle
+Fixed skip previous icon on Android 5.0
