@@ -1,0 +1,4 @@
+Jockey 1.1.0 beta 3 Release Notes
+Aesthetic changes
+Workaround for equalizer glitch
+Actually fixed skip previous button (probably)
