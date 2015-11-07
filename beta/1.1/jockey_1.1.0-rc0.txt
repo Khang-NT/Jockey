@@ -1,0 +1,6 @@
+Jockey 1.1.0 RC 0 Release Notes
+ - Fixed startup crash when not using an equalizer
+ - Improved player behavior
+ - Made play/skip counts more accurate
+ - New album page
+ - Minor visual changes
