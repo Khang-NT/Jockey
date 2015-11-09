@@ -1,0 +1,3 @@
+Jockey 1.1.0 RC 1 Release Notes
+ - Removed equalizer workaround
+ - Fixed theme not changing when leaving the settings page
