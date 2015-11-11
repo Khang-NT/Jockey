@@ -1,0 +1,3 @@
+Jockey 1.1.0 RC 2 Release Notes
+ - Fixed system equalizers not affecting playback
+ - Added link to system equalizers on supported devices (To use the built-in equalizer, long press on the equalizer setting)
