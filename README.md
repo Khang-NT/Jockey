@@ -11,8 +11,8 @@ Beta versions of Jockey are also available on Google Play. You can opt-in to bet
 [Latest version (1.0.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.0/jockey_1.0.0.apk)
 
 ## Beta
-[Latest version (1.1.0 RC 2)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.1/jockey_1.1.0-rc2.apk)  
-[Release notes (1.1.0 RC 2)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.1/jockey_1.1.0-rc2.txt)  
+[Latest version (1.1.0 RC 3)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.1/jockey_1.1.0-rc3.apk)  
+[Release notes (1.1.0 RC 3)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.1/jockey_1.1.0-rc3.txt)  
 
 ## Pre-release Alpha
 [latest version (0.3-a-m0r1a)](https://raw.githubusercontent.com/marverenic/Jockey/build/alpha/0.3/milestone0/release1/jockey_0.3-alpha-m0r1a.apk)  
