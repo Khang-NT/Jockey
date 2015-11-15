@@ -1,0 +1,2 @@
+Jockey 1.1.1 Beta 0 Release Notes
+ - Performance improvements and bug fixes
