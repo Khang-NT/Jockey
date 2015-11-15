@@ -8,7 +8,7 @@ The easiest way to get Jockey is from [Google Play](https://play.google.com/stor
 Beta versions of Jockey are also available on Google Play. You can opt-in to beta testing [here](https://play.google.com/apps/testing/com.marverenic.music), but keep in mind that things can break from time to time.
 
 ## Stable
-[Latest version (1.0.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.0/jockey_1.0.0.apk)
+[Latest version (1.1.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.1/jockey_1.1.0.apk)
 
 ## Beta
 [Latest version (1.1.0 RC 3)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.1/jockey_1.1.0-rc3.apk)  
@@ -19,6 +19,6 @@ Beta versions of Jockey are also available on Google Play. You can opt-in to bet
 [release notes (0.3-a-m0r1a)](https://raw.githubusercontent.com/marverenic/Jockey/build/alpha/0.3/milestone0/release1/jockey_0.3-alpha-m0r1a.txt)
 
 ## Notice About Versions Prior to 0.3
-Starting with version 0.3, Jockey's downloads have been hosted on GitHub instead of SourceForge. Earlier versions of Jockey will attempt to download the latest version from SourceForge (which only prompts to update from the latest version from GitHub). Additionally, Jockey's package signature is different in versions older than 0.3 meaning that **one has to uninstall older versions of Jockey before upgrading to 0.3+**.
+Starting with version 0.3, Jockey's downloads have been hosted on GitHub instead of SourceForge. Earlier versions of Jockey will attempt to download the latest version from SourceForge (which only prompts to update from the latest version from GitHub). Additionally, Jockey's package signature is different in versions older than 0.3 meaning that **you have to uninstall older versions of Jockey before upgrading to 0.3+**.
 
 **For seamless updates, you shouldn't install a version older than 0.3**

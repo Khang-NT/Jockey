@@ -1,0 +1,5 @@
+Jockey 1.1.0 Release Notes
+ - Added Equalizer
+    - Jockey prefers equalizers from other applications (like if your phone came with an equalizer). If you want to use the built-in equalizer, tap and hold on the equalizer setting
+ - New album page
+ - Minor bug fixes with music playback
