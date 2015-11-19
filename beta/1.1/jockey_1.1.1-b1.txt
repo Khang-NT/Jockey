@@ -1,0 +1,3 @@
+Jockey 1.1.1 Beta 1 Release Notes
+ - Fixed crash when clicking skip with an empty queue
+ - Fixed grid spacing on tablets
