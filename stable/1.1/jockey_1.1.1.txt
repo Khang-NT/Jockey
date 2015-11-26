@@ -1,0 +1,3 @@
+Jockey 1.1.0 Release Notes
+ - Made music controls more responsive
+ - Crash fixes
