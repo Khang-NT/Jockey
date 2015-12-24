@@ -1,0 +1,2 @@
+Jockey 1.1.3 Beta 1 Release Notes
+ - Potential fix for frequent playback errors
