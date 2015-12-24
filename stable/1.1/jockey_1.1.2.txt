@@ -1,0 +1,2 @@
+Jockey 1.1.2 Release Notes
+ - Crash fixes
