@@ -1,0 +1,3 @@
+Jockey 1.1.3 Release Notes
+ - Crash fixes
+ - Potential fix for songs not playing
