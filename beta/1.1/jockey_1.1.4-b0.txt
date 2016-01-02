@@ -1,0 +1,6 @@
+Jockey 1.1.4 Beta 0 Release Notes
+ - Added song time to the Now Playing page
+ - Added time popup to seekbar
+
+Known issues:
+ - When playback is complete, the seekbar and timestamps behave oddly
