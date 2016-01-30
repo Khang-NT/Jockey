@@ -1,0 +1,4 @@
+1.2 Beta 0 release notes
+ - Redesigned Now Playing page
+ - Merged queue into now playing page. To get to the queue, just scroll up.
+ - Minor visual changes & bug fixes
