@@ -1,0 +1,3 @@
+1.2 Beta 1 release notes
+ - Redesigned miniplayer
+ - Fixed artwork going out of sync with player service
