@@ -1,0 +1,6 @@
+1.2 RC 1 release notes
+ - Fixed Now Playing page crash on Lollipop devices
+
+From RC 0:
+ - General visual improvements
+ - Added gesture toggle
