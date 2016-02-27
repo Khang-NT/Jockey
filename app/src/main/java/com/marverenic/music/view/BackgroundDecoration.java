@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -23,18 +24,10 @@ public class BackgroundDecoration extends RecyclerView.ItemDecoration {
     /**
      * Create an ItemDecorator for use with a RecyclerView
      * @param color the color of the background
+     * @param excludedLayoutIDs A list of layoutIDs to exclude adding a background color to
+     *                          empty to add a background to the entire RecyclerView
      */
-    public BackgroundDecoration(int color) {
-        this(color, null);
-    }
-
-    /**
-     * Create an ItemDecorator for use with a RecyclerView
-     * @param color the color of the background
-     * @param excludedLayoutIDs an array of layoutIDs to exclude adding a background color to
-     *                          null to add a background to the entire RecyclerView
-     */
-    public BackgroundDecoration(int color, int[] excludedLayoutIDs){
+    public BackgroundDecoration(int color, @IdRes int... excludedLayoutIDs) {
         mBackground = new ColorDrawable(color);
         excludedIDs = excludedLayoutIDs;
     }
@@ -44,7 +37,7 @@ public class BackgroundDecoration extends RecyclerView.ItemDecoration {
         int left = parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight();
 
-        if (mShadow == null){
+        if (mShadow == null) {
             //noinspection deprecation
             mShadow = (NinePatchDrawable) parent.getContext().getResources()
                     .getDrawable(R.drawable.list_shadow);
@@ -53,7 +46,7 @@ public class BackgroundDecoration extends RecyclerView.ItemDecoration {
         Rect shadowPadding = new Rect();
         mShadow.getPadding(shadowPadding);
 
-        if (excludedIDs == null) {
+        if (excludedIDs == null || excludedIDs.length == 0) {
             int top = 0;
             int bottom = c.getHeight();
 
@@ -63,28 +56,42 @@ public class BackgroundDecoration extends RecyclerView.ItemDecoration {
             mShadow.setBounds(left - shadowPadding.left, top - shadowPadding.top,
                     right + shadowPadding.right, bottom + shadowPadding.bottom);
             mShadow.draw(c);
-        }
-        else{
+        } else {
             int layoutCount = parent.getChildCount();
-            for (int i = 0; i < layoutCount; i++){
+            for (int i = 0; i < layoutCount; i++) {
                 View topView = parent.getChildAt(i);
                 if (includeView(topView.getId())) {
 
                     //noinspection StatementWithEmptyBody
-                    while(++i < layoutCount && includeView(parent.getChildAt(i).getId())){
+                    while (++i < layoutCount && includeView(parent.getChildAt(i).getId())) {
                         // Find the last view in this section that will receive a background
                         // This loop is intentionally left empty
                     }
 
                     View bottomView = parent.getChildAt(--i);
+                    Rect topInset = new Rect();
+                    Rect endInset = new Rect();
+                    parent.getLayoutManager().calculateItemDecorationsForChild(topView, topInset);
+                    parent.getLayoutManager().calculateItemDecorationsForChild(bottomView, endInset);
 
-                    RecyclerView.LayoutParams topParams = (RecyclerView.LayoutParams) topView.getLayoutParams();
-                    RecyclerView.LayoutParams bottomParams = (RecyclerView.LayoutParams) bottomView.getLayoutParams();
+                    RecyclerView.LayoutParams topParams =
+                            (RecyclerView.LayoutParams) topView.getLayoutParams();
+                    RecyclerView.LayoutParams bottomParams =
+                            (RecyclerView.LayoutParams) bottomView.getLayoutParams();
 
-                    final int top = topView.getTop() - topParams.topMargin;
-                    final int bottom = (i == layoutCount - 1 || parent.getChildAdapterPosition(bottomView) == parent.getAdapter().getItemCount() - 1)
-                            ? parent.getBottom() // If this is the last item in the adapter or last visible view, fill the parent
-                            : bottomView.getBottom() + bottomParams.bottomMargin; // Otherwise, fill to the bottom of the last item in the section
+                    int top = topView.getTop() - topParams.topMargin - topInset.top;
+                    int bottom;
+
+                    if (i == layoutCount - 1 || parent.getChildAdapterPosition(bottomView)
+                            == parent.getAdapter().getItemCount() - 1) {
+                        // If this is the last item in the adapter or last visible view,
+                        // fill the parent
+                        bottom = parent.getBottom();
+                    } else {
+                        // Otherwise, fill to the bottom of the last item in the section
+                        bottom = bottomView.getBottom() + endInset.bottom
+                                + bottomParams.bottomMargin;
+                    }
 
                     mBackground.setBounds(left, top, right, bottom);
                     mBackground.draw(c);
@@ -97,9 +104,11 @@ public class BackgroundDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    private boolean includeView(int viewId){
-        for (int i : excludedIDs){
-            if (viewId == i) return false;
+    private boolean includeView(int viewId) {
+        for (int i : excludedIDs) {
+            if (viewId == i) {
+                return false;
+            }
         }
         return true;
     }

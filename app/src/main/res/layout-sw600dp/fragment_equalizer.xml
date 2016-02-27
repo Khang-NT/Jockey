@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/equalizerPresetFrame"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="@dimen/global_padding"
+            android:layout_marginRight="@dimen/global_padding">
+
+            <TextView
+                android:id="@+id/equalizerPresetPrefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/equalizerPresetPrefix"/>
+
+            <Spinner
+                android:id="@+id/equalizerPresetSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/equalizerPresetPrefix"
+                android:layout_toRightOf="@id/equalizerPresetPrefix" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/equalizer_panel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:padding="@dimen/list_padding">
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/equalizerNotes"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:padding="16dp"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    tools:context=".Library">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools">
 
     <FrameLayout
         android:id="@+id/miniplayer_holder"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/now_playing_ticker_height"
+        android:layout_height="@dimen/miniplayer_height"
         android:layout_alignParentBottom="true"
         android:background="@color/background_miniplayer_dark"
         android:elevation="@dimen/miniplayer_elevation">
 
-        <include
-            layout="@layout/miniplayer"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+        <fragment
+            android:id="@+id/miniplayer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.marverenic.music.fragments.MiniplayerFragment"
+            tools:layout="@layout/fragment_miniplayer"/>
 
     </FrameLayout>
 
@@ -35,7 +36,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 android:id="@+id/toolbar"
                 app:layout_scrollFlags="scroll|enterAlways|snap"/>

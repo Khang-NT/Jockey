@@ -2,5 +2,10 @@
 
     <dimen name="global_padding">46dp</dimen>
     <dimen name="extended_actionbar_height">240dp</dimen>
+    <dimen name="now_playing_time_margin">16dp</dimen>
+    <dimen name="player_frame_height">192dp</dimen>
+    <dimen name="player_frame_info_height">128dp</dimen>
+    <dimen name="player_frame_ctrl_height">64dp</dimen>
+    <dimen name="miniplayer_height">56dp</dimen>
 
 </resources>

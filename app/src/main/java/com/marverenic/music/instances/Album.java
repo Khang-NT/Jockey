@@ -5,10 +5,11 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.marverenic.music.utils.Util;
 
 import java.util.Locale;
 
-public class Album implements Parcelable, Comparable<Album> {
+public final class Album implements Parcelable, Comparable<Album> {
 
     public static final Parcelable.Creator<Album> CREATOR = new Parcelable.Creator<Album>() {
         public Album createFromParcel(Parcel in) {
@@ -21,45 +22,64 @@ public class Album implements Parcelable, Comparable<Album> {
     };
 
     @SerializedName("albumId")
-    public int albumId;
+    protected long albumId;
     @SerializedName("albumName")
-    public String albumName;
+    protected String albumName;
     @SerializedName("artistId")
-    public int artistId;
+    protected long artistId;
     @SerializedName("artistName")
-    public String artistName;
+    protected String artistName;
     @SerializedName("year")
-    public String year;
+    protected int year;
     @SerializedName("artUri")
-    public String artUri;
+    protected String artUri;
 
-    public Album(final int albumId, final String albumName, final int artistId, final String artistName, final String year, final String artUri) {
-        this.albumId = albumId;
-        this.albumName = albumName;
-        this.artistId = artistId;
-        this.artistName = artistName;
-        this.year = year;
-        this.artUri = artUri;
+    private Album() {
+
     }
 
     private Album(Parcel in) {
-        albumId = in.readInt();
+        albumId = in.readLong();
         albumName = in.readString();
-        artistId = in.readInt();
+        artistId = in.readLong();
         artistName = in.readString();
-        year = in.readString();
+        year = in.readInt();
         artUri = in.readString();
+    }
+
+    public long getAlbumId() {
+        return albumId;
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public long getArtistId() {
+        return artistId;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getArtUri() {
+        return artUri;
     }
 
     @Override
     public int hashCode() {
-        return albumId;
+        return Util.hashLong(albumId);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj ||
-                (obj != null && obj instanceof Album && albumId == ((Album) obj).albumId);
+        return this == obj
+                || (obj != null && obj instanceof Album && albumId == ((Album) obj).albumId);
     }
 
     public String toString() {
@@ -73,18 +93,22 @@ public class Album implements Parcelable, Comparable<Album> {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(albumId);
+        dest.writeLong(albumId);
         dest.writeString(albumName);
-        dest.writeInt(artistId);
+        dest.writeLong(artistId);
         dest.writeString(artistName);
-        dest.writeString(year);
+        dest.writeInt(year);
         dest.writeString(artUri);
     }
 
     @Override
     public int compareTo(@NonNull Album another) {
-        String o1c = albumName.toLowerCase(Locale.ENGLISH);
-        String o2c = another.albumName.toLowerCase(Locale.ENGLISH);
+        String o1c = (albumName == null)
+                ? ""
+                : albumName.toLowerCase(Locale.ENGLISH);
+        String o2c = (another.albumName == null)
+                ? ""
+                : another.albumName.toLowerCase(Locale.ENGLISH);
         if (o1c.startsWith("the ")) {
             o1c = o1c.substring(4);
         } else if (o1c.startsWith("a ")) {

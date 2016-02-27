@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -21,25 +22,32 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
     private Drawable dividerDrawable;
     private static int measuredDividerHeight;
     private int[] excludedIDs;
+    private boolean drawOnLastItem;
 
     /**
-     * Create a new ItemDecorator for use with a RecyclerView
+     * Create an ItemDecorator for use with a RecyclerView
      * @param context A context held temporarily to get colors and display metrics
+     * @param excludedLayoutIDs A list of layoutIDs to exclude adding a divider to
+     *                          none to add a divider to each entry in the RecyclerView
      */
-    public DividerDecoration(Context context) {
-        this(context, null);
+    public DividerDecoration(Context context, @IdRes int... excludedLayoutIDs) {
+        this(context, false, excludedLayoutIDs);
     }
 
     /**
      * Create an ItemDecorator for use with a RecyclerView
      * @param context A context held temporarily to get colors and display metrics
-     * @param excludedLayoutIDs an array of layoutIDs to exclude adding a divider to
-     *                          null to add a divider to each entry in the RecyclerView
+     * @param drawOnLastItem Whether or not to draw a divider under the last item in the list
+     * @param excludedLayoutIDs A list of layoutIDs to exclude adding a divider to
+     *                          none to add a divider to each entry in the RecyclerView
      */
-    public DividerDecoration(Context context, int[] excludedLayoutIDs){
-        dividerDrawable = new ColorDrawable(Themes.isLight(context)? 0x1E000000 : 0x1EFFFFFF);
-        measuredDividerHeight = (int) Math.ceil(DIVIDER_HEIGHT_DP * context.getResources().getDisplayMetrics().density);
+    public DividerDecoration(Context context, boolean drawOnLastItem,
+                             @IdRes int... excludedLayoutIDs) {
+        dividerDrawable = new ColorDrawable(Themes.isLight(context) ? 0xFFE0E0E0 : 0xFF1F1F1F);
+        measuredDividerHeight = (int) Math.ceil(
+                DIVIDER_HEIGHT_DP * context.getResources().getDisplayMetrics().density);
         excludedIDs = excludedLayoutIDs;
+        this.drawOnLastItem = drawOnLastItem;
     }
 
     @Override
@@ -48,34 +56,43 @@ public class DividerDecoration extends RecyclerView.ItemDecoration {
         final int right = parent.getWidth() - parent.getPaddingRight();
 
         final int endIndex = parent.getChildCount();
-        for (int i = 0; i < endIndex - 1; i++) { // Exclude the last item in the list
+        for (int i = 0; i < endIndex; i++) {
             final View child = parent.getChildAt(i);
-            if (excludedIDs == null || includeView(child.getId())) {
+            if (excludedIDs == null || includeView(child)) {
 
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-                final int top = child.getBottom() + params.bottomMargin;
+                final RecyclerView.LayoutParams params =
+                        (RecyclerView.LayoutParams) child.getLayoutParams();
+                final int top = child.getBottom() + params.bottomMargin
+                        + (int) child.getTranslationY();
                 final int bottom = top + measuredDividerHeight;
 
                 dividerDrawable.setBounds(left, top, right, bottom);
 
-                // Don't draw separators under the last item in a section
-                if (excludedIDs == null || includeView(parent.getChildAt(i + 1).getId())) dividerDrawable.draw(c);
+                // Don't draw separators under the last item in a section unless we've been told to
+                View nextChild = parent.getChildAt(i + 1);
+                if (drawOnLastItem || (nextChild != null && includeView(nextChild))) {
+                    dividerDrawable.draw(c);
+                }
             }
         }
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
+                               RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
 
-        if (excludedIDs == null || includeView(view.getId())){
+        if (includeView(view)) {
             outRect.bottom = measuredDividerHeight;
         }
     }
 
-    private boolean includeView(int viewId){
-        for (int i : excludedIDs){
-            if (viewId == i) return false;
+    protected boolean includeView(View view) {
+        int viewId = view.getId();
+        for (int i : excludedIDs) {
+            if (viewId == i) {
+                return false;
+            }
         }
         return true;
     }

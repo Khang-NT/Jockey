@@ -1,54 +1,97 @@
 package com.marverenic.music.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.marverenic.music.BuildConfig;
-import com.marverenic.music.Library;
-import com.marverenic.music.Player;
 import com.marverenic.music.PlayerController;
 import com.marverenic.music.R;
-import com.marverenic.music.instances.Song;
+import com.marverenic.music.instances.Library;
 import com.marverenic.music.utils.Navigate;
+import com.marverenic.music.utils.Prefs;
 import com.marverenic.music.utils.Themes;
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity
+        implements PlayerController.UpdateListener, PlayerController.ErrorListener {
 
     private static final boolean DEBUG = BuildConfig.DEBUG;
-    private BroadcastReceiver updateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            update();
-            updateMiniplayer();
-        }
-    };
+
+    // Used when resuming the Activity to respond to a potential theme change
+    @StyleRes
+    private int themeId;
 
     /**
      * @inheritDoc
      */
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         if (DEBUG) Log.i(getClass().toString(), "Called onCreate");
 
         Themes.setTheme(this);
+        themeId = Themes.getTheme(this);
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        if (Library.isEmpty()){
-            Library.scanAll(this);
+        if (Library.isEmpty()) {
+            // Show a first start confirmation about privacy
+            // This can't be done in the Application class because it's not allowed to show
+            // AlertDialogs. Additionally, this check has to occur in every Activity since Jockey can
+            // be started from sources other than its main Activity.
+
+            final SharedPreferences prefs = Prefs.getPrefs(this);
+
+            if (prefs.getBoolean(Prefs.SHOW_FIRST_START, true)) {
+                final View messageView = getLayoutInflater().inflate(R.layout.alert_pref, null);
+                final TextView message = (TextView) messageView.findViewById(R.id.alertMessage);
+                final CheckBox pref = (CheckBox) messageView.findViewById(R.id.alertPref);
+
+                message.setText(Html.fromHtml(getString(R.string.first_launch_detail)));
+                message.setMovementMethod(LinkMovementMethod.getInstance());
+
+                pref.setChecked(true);
+                pref.setText(R.string.enable_additional_logging_detailed);
+
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.first_launch_title)
+                        .setView(messageView)
+                        .setPositiveButton(R.string.action_agree,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        prefs.edit()
+                                                .putBoolean(Prefs.SHOW_FIRST_START, false)
+                                                .putBoolean(Prefs.ALLOW_LOGGING, pref.isChecked())
+                                                .apply();
+
+                                        Library.scanAll(BaseActivity.this);
+                                    }
+                                })
+                        .setCancelable(false)
+                        .show();
+
+            } else if (Library.isEmpty()) {
+                Library.scanAll(this);
+            }
         }
     }
 
@@ -69,7 +112,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @inheritDoc
      */
     @Override
-    public void setContentView(@LayoutRes int layoutResId){
+    public void setContentView(@LayoutRes int layoutResId) {
         super.setContentView(layoutResId);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -84,26 +127,24 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
 
         themeActivity();
-
-        if (findViewById(R.id.miniplayer) != null) {
-            findViewById(R.id.miniplayer).setOnClickListener(this);
-            findViewById(R.id.playButton).setOnClickListener(this);
-            findViewById(R.id.skipButton).setOnClickListener(this);
-        }
     }
 
     /**
      * @inheritDoc
      */
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         if (DEBUG) Log.i(getClass().toString(), "Called onResume");
-        Themes.setApplicationIcon(this);
-        registerReceiver(updateReceiver, new IntentFilter(Player.UPDATE_BROADCAST));
-        if (PlayerController.getNowPlaying() != null) {
-            update();
-            updateMiniplayer();
+
+        if (themeId != Themes.getTheme(this)) {
+            // If the theme was changed since this Activity was last started, recreate it
+            recreate();
+        } else {
+            Themes.setApplicationIcon(this);
+            PlayerController.registerUpdateListener(this);
+            PlayerController.registerErrorListener(this);
+            onUpdate();
         }
     }
 
@@ -111,19 +152,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @inheritDoc
      */
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         if (DEBUG) Log.i(getClass().toString(), "Called onPause");
-        try {
-            unregisterReceiver(updateReceiver);
-        } catch (Exception ignored) {}
+        PlayerController.unregisterUpdateListener(this);
+        PlayerController.unregisterErrorListener(this);
     }
 
     /**
      * @inheritDoc
      */
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         if (DEBUG) Log.i(getClass().toString(), "Called onDestroy");
     }
@@ -132,8 +172,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @inheritDoc
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId() == android.R.id.home){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
             Navigate.up(this);
             return true;
         }
@@ -144,7 +184,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * @inheritDoc
      */
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         if (DEBUG) Log.i(getClass().toString(), "Called calledOnBackPressed");
         super.onBackPressed();
         Navigate.back(this);
@@ -155,7 +195,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * sets the app's primary color, app icon, and background color. If the miniplayer is in the
      * hierarchy, it is also themed.
      */
-    public void themeActivity(){
+    public void themeActivity() {
         Themes.updateColors(this);
         Themes.setApplicationIcon(this);
 
@@ -167,57 +207,34 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     /**
-     * Called when the @link PlayerService sends an UPDATE broadcast.
-     */
-    public void update(){
-
-    }
-
-    /**
-     * Update the miniplayer to reflect the most recent @link PlayerService status. If no miniplayer
-     * exists in the view, override this method with an instance_empty code block.
-     */
-    @SuppressWarnings("ResourceType")
-    public void updateMiniplayer(){
-        if (DEBUG) Log.i(getClass().toString(), "Called updateMiniplayer");
-        final View miniplayerView = findViewById(R.id.miniplayer_holder);
-        final Song nowPlaying = PlayerController.getNowPlaying();
-
-        if (nowPlaying != null){
-            ImageView artworkImageView = (ImageView) miniplayerView.findViewById(R.id.imageArtwork);
-            TextView songTextView = (TextView) miniplayerView.findViewById(R.id.textNowPlayingTitle);
-            TextView artistTextView = (TextView) miniplayerView.findViewById(R.id.textNowPlayingDetail);
-            ImageView playButton = (ImageView) miniplayerView.findViewById(R.id.playButton);
-
-            if (PlayerController.getArtwork() != null)
-                artworkImageView.setImageBitmap(PlayerController.getArtwork());
-            else
-                artworkImageView.setImageResource(R.drawable.art_default);
-
-            songTextView.setText(nowPlaying.songName);
-            artistTextView.setText(nowPlaying.artistName);
-            playButton.setImageResource((PlayerController.isPlaying())
-                    ? R.drawable.ic_pause_36dp
-                    : R.drawable.ic_play_arrow_36dp);
-
-        }
-    }
-
-    /**
      * @inheritDoc
      */
     @Override
-    public void onClick(View view){
-        switch (view.getId()) {
-            case R.id.miniplayer:
-                Navigate.to(this, NowPlayingActivity.class);
-                break;
-            case R.id.playButton:
-                PlayerController.togglePlay();
-                break;
-            case R.id.skipButton:
-                PlayerController.skip();
-                break;
+    public void onUpdate() {
+        if (DEBUG) Log.i(getClass().toString(), "Called onUpdate");
+    }
+
+    @Override
+    public void onError(String message) {
+        if (DEBUG) Log.i(getClass().toString(), "Called onError : " + message);
+        showSnackbar(message);
+    }
+
+    protected void showSnackbar(String message) {
+        View content = findViewById(R.id.list);
+        if (content == null) {
+            content = findViewById(android.R.id.content);
+        }
+        Snackbar.make(content, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Nullable
+    @SuppressWarnings("deprecation")
+    public Drawable getDrawableCompat(@DrawableRes int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return getDrawable(id);
+        } else {
+            return getResources().getDrawable(id);
         }
     }
 }

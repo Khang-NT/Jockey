@@ -5,8 +5,9 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
+import com.marverenic.music.utils.Util;
 
-public class Genre implements Parcelable, Comparable<Genre> {
+public final class Genre implements Parcelable, Comparable<Genre> {
 
     public static final Parcelable.Creator<Genre> CREATOR = new Parcelable.Creator<Genre>() {
         public Genre createFromParcel(Parcel in) {
@@ -19,30 +20,36 @@ public class Genre implements Parcelable, Comparable<Genre> {
     };
 
     @SerializedName("genreId")
-    public int genreId;
+    public long genreId;
     @SerializedName("genreName")
     public String genreName;
 
-    public Genre(final int genreId, final String genreName) {
-        super();
-        this.genreId = genreId;
-        this.genreName = genreName;
+    private Genre() {
+
     }
 
     private Genre(Parcel in) {
-        genreId = in.readInt();
+        genreId = in.readLong();
         genreName = in.readString();
+    }
+
+    public long getGenreId() {
+        return genreId;
+    }
+
+    public String getGenreName() {
+        return genreName;
     }
 
     @Override
     public int hashCode() {
-        return genreId;
+        return Util.hashLong(genreId);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj ||
-                (obj != null && obj instanceof Genre && genreId == ((Genre) obj).genreId);
+        return this == obj
+                || (obj != null && obj instanceof Genre && genreId == ((Genre) obj).genreId);
     }
 
     public String toString() {
@@ -56,7 +63,7 @@ public class Genre implements Parcelable, Comparable<Genre> {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(genreId);
+        dest.writeLong(genreId);
         dest.writeString(genreName);
     }
 
