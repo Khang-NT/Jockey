@@ -1,0 +1,7 @@
+Jockey 1.2.0 Release Notes
+ - Redesigned Now Playing page
+ - Add gestures to the now playing page
+ - Swipe left and right over the album artwork to skip, tap to play/pause the current song
+ - Merged queue into now playing page
+ - Redesigned miniplayer
+ - Minor bug fixes & visual improvements
