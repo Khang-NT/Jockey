@@ -3,7 +3,7 @@
     "albumName": "Shrub Polemics",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/hedgeclipper.jpg",
     "artistName": "Hedgeclipper",
-    "year": "",
+    "year": 0,
     "albumId": 0,
     "artistId": 0
   },
@@ -11,7 +11,7 @@
     "albumName": "CMB (Single)",
     "artUri": "",
     "artistName": "Cosmic Microwave Background",
-    "year": "",
+    "year": 0,
     "albumId": 1,
     "artistId": 1
   },
@@ -19,7 +19,7 @@
     "albumName": "Influences",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/influences.jpg",
     "artistName": "Neurosis",
-    "year": "",
+    "year": 0,
     "albumId": 2,
     "artistId": 2
   },
@@ -27,7 +27,7 @@
     "albumName": "Hydra",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/hydra.jpg",
     "artistName": "Pandemonium Tremor",
-    "year": "",
+    "year": 0,
     "albumId": 3,
     "artistId": 3
   },
@@ -35,7 +35,7 @@
     "albumName": "Irregularity",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/irregularity.jpg",
     "artistName": "Entropy",
-    "year": "",
+    "year": 0,
     "albumId": 4,
     "artistId": 4
   },
@@ -43,7 +43,7 @@
     "albumName": "Oracle",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/oracle.jpg",
     "artistName": "All Logic",
-    "year": "",
+    "year": 0,
     "albumId": 5,
     "artistId": 5
   },
@@ -51,7 +51,7 @@
     "albumName": "Illogical Capacitance",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/capacitor.jpg",
     "artistName": "Diode Discontinuity",
-    "year": "",
+    "year": 0,
     "albumId": 6,
     "artistId": 6
   },
@@ -59,7 +59,7 @@
     "albumName": "Catalyst Reaper",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/catalyst.jpg",
     "artistName": "Diode Discontinuity",
-    "year": "",
+    "year": 0,
     "albumId": 7,
     "artistId": 6
   },
@@ -67,7 +67,7 @@
     "albumName": "Moonlight",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/moonlight.jpg",
     "artistName": "Intrepid",
-    "year": "",
+    "year": 0,
     "albumId": 8,
     "artistId": 7
   },
@@ -75,7 +75,7 @@
     "albumName": "Indignant",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/indignant.jpg",
     "artistName": "Turquoise",
-    "year": "",
+    "year": 0,
     "albumId": 9,
     "artistId": 8
   },
@@ -83,7 +83,7 @@
     "albumName": "Blue Career",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/turquoise.jpg",
     "artistName": "Turquoise",
-    "year": "",
+    "year": 0,
     "albumId": 10,
     "artistId": 8
   },
@@ -91,7 +91,7 @@
     "albumName": "Vanquish",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/vanquish.jpg",
     "artistName": "Roulette",
-    "year": "",
+    "year": 0,
     "albumId": 11,
     "artistId": 9
   },
@@ -99,7 +99,7 @@
     "albumName": "Hereditary",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/hereditary.jpg",
     "artistName": "Elision",
-    "year": "",
+    "year": 0,
     "albumId": 12,
     "artistId": 10
   },
@@ -107,7 +107,7 @@
     "albumName": "Monsoon",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/monsoon.jpg",
     "artistName": "Thyself",
-    "year": "",
+    "year": 0,
     "albumId": 13,
     "artistId": 11
   },
@@ -115,7 +115,7 @@
     "albumName": "Flock",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/flock.jpg",
     "artistName": "Venom Lynx",
-    "year": "",
+    "year": 0,
     "albumId": 14,
     "artistId": 12
   },
@@ -123,7 +123,7 @@
     "albumName": "Polytechnic Tide",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/tide.jpg",
     "artistName": "Quasar Gamblers",
-    "year": "",
+    "year": 0,
     "albumId": 15,
     "artistId": 13
   },
@@ -131,8 +131,16 @@
     "albumName": "Dynasty Homicide",
     "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/dynasty.jpg",
     "artistName": "Solitary Romance",
-    "year": "",
+    "year": 0,
     "albumId": 16,
     "artistId": 14
+  },
+  {
+    "albumName": "BST",
+    "artUri": "/storage/emulated/0/Android/data/com.marverenic.music.demo/files/technically.jpg",
+    "artistName": "Computational Velocity",
+    "year": 0,
+    "albumId": 17,
+    "artistId": 15
   }
 ]
