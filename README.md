@@ -8,8 +8,8 @@ The easiest way to get Jockey is from [Google Play](https://play.google.com/stor
 Beta versions of Jockey are also available on Google Play. You can opt-in to beta testing [here](https://play.google.com/apps/testing/com.marverenic.music), but keep in mind that things can break from time to time.
 
 ## Stable
-[Latest version (1.2.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.1/jockey_1.2.0.apk)  
-[Release notes (1.2.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.1/jockey_1.2.0.txt)
+[Latest version (1.2.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.2/jockey_1.2.0.apk)
+[Release notes (1.2.0)](https://raw.githubusercontent.com/marverenic/Jockey/build/stable/1.2/jockey_1.2.0.txt)
 
 ## Beta
 [Latest version (1.2 RC 2)](https://raw.githubusercontent.com/marverenic/Jockey/build/beta/1.2/jockey_1.2-rc2.apk)  
